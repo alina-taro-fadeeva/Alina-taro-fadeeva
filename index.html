@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Матриця Долі | Аліна Таро Фадєєва</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #2a1b3c 0%, #4a2b5c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255, 248, 245, 0.95);
+            border-radius: 40px;
+            padding: 30px 25px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #c89fda;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 36px;
+            background: linear-gradient(45deg, #6b3e8c, #b35c9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #4a2f5e;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .input-section {
+            background: #f5ecfe;
+            border-radius: 100px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+        .input-section input {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px 25px;
+            border: 2px solid #c9a9e6;
+            border-radius: 60px;
+            font-size: 16px;
+            background: white;
+        }
+        .calc-btn {
+            background: linear-gradient(145deg, #7e57a5, #b24592);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .result-area {
+            display: none;
+        }
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .matrix-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px 10px;
+            text-align: center;
+            border: 2px solid #eed9ff;
+        }
+        .card-number {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(145deg, #3e2560, #b53b96);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .footer-brand {
+            background: #e7d4ff;
+            border-radius: 50px;
+            padding: 18px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .download-btn {
+            background: white;
+            border: 4px solid #9b66b9;
+            color: #4a2a6b;
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+        .watermark {
+            font-size: 12px;
+            color: #9080b3;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 МАТРИЦЯ ДОЛІ</h1>
+            <p>розрахунок від <strong>АЛІНА ТАРО ФАДЄЄВА</strong></p>
+        </div>
+        
+        <div class="input-section">
+            <input type="date" id="birthdate" value="1990-01-01">
+            <button class="calc-btn" id="calculateBtn">Розрахувати</button>
+        </div>
+        
+        <div class="result-area" id="resultArea">
+            <div class="matrix-grid" id="matrixResults">
+                <!-- результати з'являться тут -->
+            </div>
+            
+            <div class="footer-brand">
+                🌟 Детальне розшифрування - консультація @alina_taro 🌟
+            </div>
+            
+            <button class="download-btn" id="downloadBtn">
+                ⬇️ Зберегти матрицю
+            </button>
+            <div class="watermark">© Аліна Таро Фадєєва | instagram: @alina_taro</div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        const BRAND = "АЛІНА ТАРО ФАДЄЄВА";
+        const INSTA = "@alina_taro";
+        
+        function reduceToArcan(num) {
+            if (num <= 22 && num > 0) return num;
+            let sum = 0;
+            for (let char of num.toString()) sum += parseInt(char);
+            return sum > 22 ? reduceToArcan(sum) : (sum || 22);
+        }
+        
+        function calculateMatrix() {
+            const date = document.getElementById('birthdate').value.split('-');
+            if (date.length < 3) return;
+            
+            const day = parseInt(date[2]);
+            const month = parseInt(date[1]);
+            let yearSum = 0;
+            for (let char of date[0]) yearSum += parseInt(char);
+            
+            const dayArc = day > 22 ? reduceToArcan(day) : day;
+            const monthArc = month;
+            const yearArc = reduceToArcan(yearSum);
+            const comfort = reduceToArcan(dayArc + monthArc + yearArc);
+            
+            document.getElementById('matrixResults').innerHTML = `
+                <div class="matrix-card"><div>День</div><div class="card-number">${dayArc}</div></div>
+                <div class="matrix-card"><div>Місяць</div><div class="card-number">${monthArc}</div></div>
+                <div class="matrix-card"><div>Рік</div><div class="card-number">${yearArc}</div></div>
+                <div class="matrix-card"><div>Зона комфорту</div><div class="card-number">${comfort}</div></div>
+            `;
+            document.getElementById('resultArea').style.display = 'block';
+        }
+        
+        document.getElementById('calculateBtn').onclick = calculateMatrix;
+        window.onload = calculateMatrix;
+        
+        document.getElementById('downloadBtn').onclick = function() {
+            const element = document.getElementById('matrixResults');
+            html2canvas(element).then(canvas => {
+                const ctx = canvas.getContext('2d');
+                ctx.font = 'bold 20px Arial';
+                ctx.fillStyle = '#442b63';
+                ctx.fillText(`© ${BRAND}`, 30, canvas.height - 30);
+                const link = document.createElement('a');
+                link.download = 'matrytsya.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        };
+    </script>
+</body>
+</html>
